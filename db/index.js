@@ -23,9 +23,7 @@ const User = sequelize.define('User', {
     allowNull: false,
   },
 });
-await User.sync({ force: true });
-
-const admin = await User.create({ email: 'admin@admin.com', password: '1234'} );
+await User.sync();
 
 try {
   await sequelize.authenticate();
