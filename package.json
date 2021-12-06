@@ -7,10 +7,16 @@
   "scripts": {
     "dev": "nodemon app.js"
   },
-  "keywords": ["sequelize", "express", "jwt", "bcrypt"],
+  "keywords": [
+    "sequelize",
+    "express",
+    "jwt",
+    "bcrypt"
+  ],
   "author": "benjaminpla.dev@gmail.com",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mariadb": "^2.5.5"
   }
 }
