@@ -5,11 +5,17 @@ import Bcrypt from 'bcrypt';
 const router = express.Router();
 const bcrypt = Bcrypt;
 
-router.get('/', (req, res) => {
-  res.json({ ok: true, msg: 'all good!' });
+router.post('/signin', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await db.findOne({ where: { email } });
+  if (user === null) {
+    res.json({ ok: false, msg: 'User not found'});
+  } else {
+    res.json({ ok: true, msg: `Welcome ${email}!` });
+  };
 });
 
-router.post('/', async (req, res) => {
+router.post('/signup', async (req, res) => {
   const { email, password } = req.body;
   try {
     await bcrypt.hash(password, 10)
@@ -23,7 +29,7 @@ router.post('/', async (req, res) => {
   } catch (error) {
     console.log(error);
   } finally {
-    res.json({ ok: true, msg: `created ${email} account!`});
+    res.json({ ok: true, msg: `Created ${email} account!`});
   };
 });
 
