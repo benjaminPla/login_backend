@@ -8,10 +8,16 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  console.log(req.body);
-  // const [email, password] = req.body;
-  await db.create({ email: req.body.email, password: req.body.password } );
-  res.json({ ok: true, mdg: 'created ' + req.body.email + ' account!'})
+  const { email, password } = req.body;
+  try {
+    await db.create({ email, password } );
+  } catch(error) {
+    res.json({
+      ok: false,
+      msg: { code: error.parent.code, errno: error.parent.errno }} );
+  } finally {
+    res.json({ ok: true, msg: `created ${email} account!`})
+  };
 });
 
 export default router;
