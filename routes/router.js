@@ -1,15 +1,21 @@
 import express from 'express';
 import db from '../db/index.js';
+import Sequelize from 'sequelize';
 import Bcrypt from 'bcrypt';
 
 const router = express.Router();
+const Op = Sequelize.Op;
 const bcrypt = Bcrypt;
 
 router.post('/signin', async (req, res) => {
   const { email, password } = req.body;
-  const user = await db.findOne({ where: { email } });
-  if (user === null) {
-    res.json({ ok: false, msg: 'User not found'});
+
+  const user = await db.findOne({
+    where: { email }} );
+  !user && res.json({ ok: false, msg: 'User not found'});
+
+  if (!await bcrypt.compare(password, user.password)) {
+    res.json({ ok: false, msg: 'Data do not match'});
   } else {
     res.json({ ok: true, msg: `Welcome ${email}!` });
   };
@@ -34,3 +40,9 @@ router.post('/signup', async (req, res) => {
 });
 
 export default router;
+
+// const user = await db.findOne({
+  //   where: { [Op.and]:
+    //   [{ email },
+      //   { desencriptedPass }] }
+      //  });
