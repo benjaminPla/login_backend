@@ -2,12 +2,14 @@ import express from 'express';
 import db from '../db/index.js';
 import Sequelize from 'sequelize';
 import Bcrypt from 'bcrypt';
+import middlewares from '../middlewares/middlewares.js';
 
 const router = express.Router();
 const Op = Sequelize.Op;
 const bcrypt = Bcrypt;
 
-router.post('/signin', async (req, res) => {
+router.post('/signin',[middlewares.missingEmail,middlewares.missingPassword],
+async (req, res) => {
   const { email, password } = req.body;
 
   const user = await db.findOne({
@@ -40,9 +42,3 @@ router.post('/signup', async (req, res) => {
 });
 
 export default router;
-
-// const user = await db.findOne({
-  //   where: { [Op.and]:
-    //   [{ email },
-      //   { desencriptedPass }] }
-      //  });
