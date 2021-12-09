@@ -8,7 +8,7 @@ const router = express.Router();
 const Op = Sequelize.Op;
 const bcrypt = Bcrypt;
 
-router.post('/signin',[middlewares.missingEmail,middlewares.missingPassword],
+router.post('/signin',[middlewares.missingEmail, middlewares.missingPassword],
 async (req, res) => {
   const { email, password } = req.body;
 
@@ -23,22 +23,25 @@ async (req, res) => {
   };
 });
 
-router.post('/signup', async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    await bcrypt.hash(password, 10)
-      .then(hash => db.create({ email: email, password: hash } ))
-      .catch(error => res.json({
-        ok: false,
-        msg: {
-          code: error.parent.code,
-          errno: error.parent.errno }
-        }));
-  } catch (error) {
-    console.log(error);
-  } finally {
-    res.json({ ok: true, msg: `Created ${email} account!`});
-  };
+router.post('/signup', [
+  middlewares.missingEmail,
+  middlewares.missingPassword
+  ], async (req, res) => {
+    const { email, password } = req.body;
+    try {
+      await bcrypt.hash(password, 10)
+        .then(hash => db.create({ email: email, password: hash } ))
+        .catch(error => res.json({
+          ok: false,
+          msg: {
+            code: error.parent.code,
+            errno: error.parent.errno }
+          }));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      res.json({ ok: true, msg: `Created ${email} account!`});
+    };
 });
 
 export default router;
